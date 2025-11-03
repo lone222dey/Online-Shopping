@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - WorkShala</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .checkout-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 40px;
+        }
+
+        .checkout-form {
+            background-color: var(--bg-card);
+            border-radius: var(--card-radius);
+            padding: 32px;
+        }
+
+        .checkout-summary {
+            background-color: var(--bg-card);
+            border-radius: var(--card-radius);
+            padding: 24px;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .section-title {
+            color: var(--accent-yellow);
+            font-size: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-title {
+            font-size: 14px;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .item-price {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .payment-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .payment-content {
+            background-color: var(--bg-card);
+            border-radius: var(--card-radius);
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .payment-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .payment-method {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--card-radius);
+            cursor: pointer;
+        }
+
+        .payment-method:hover {
+            background-color: var(--bg-elev);
+        }
+
+        .payment-method input[type="radio"]:checked + label {
+            color: var(--accent-yellow);
+        }
+
+        .payment-form-section {
+            margin-bottom: 16px;
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .checkout-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                margin: 20px auto;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <div class="container">
+            <h1>Checkout</h1>
+        </div>
+    </div>
+
+    <div class="checkout-container">
+        <div class="checkout-form">
+            <h2 class="section-title">Shipping Information</h2>
+            
+            <form id="checkoutForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="address">Street Address</label>
+                    <textarea id="address" name="address" rows="3" required></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pincode">PIN Code</label>
+                        <input type="text" id="pincode" name="pincode" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="state">State</label>
+                    <select id="state" name="state" required>
+                        <option value="">Select State</option>
+                        <option value="AP">Andhra Pradesh</option>
+                        <option value="AR">Arunachal Pradesh</option>
+                        <option value="AS">Assam</option>
+                        <option value="BR">Bihar</option>
+                        <option value="CT">Chhattisgarh</option>
+                        <option value="DL">Delhi</option>
+                        <option value="GA">Goa</option>
+                        <option value="GJ">Gujarat</option>
+                        <option value="HR">Haryana</option>
+                        <option value="HP">Himachal Pradesh</option>
+                        <option value="JK">Jammu and Kashmir</option>
+                        <option value="JH">Jharkhand</option>
+                        <option value="KA">Karnataka</option>
+                        <option value="KL">Kerala</option>
+                        <option value="MP">Madhya Pradesh</option>
+                        <option value="MH">Maharashtra</option>
+                        <option value="MN">Manipur</option>
+                        <option value="ML">Meghalaya</option>
+                        <option value="MZ">Mizoram</option>
+                        <option value="NL">Nagaland</option>
+                        <option value="OR">Odisha</option>
+                        <option value="PB">Punjab</option>
+                        <option value="RJ">Rajasthan</option>
+                        <option value="SK">Sikkim</option>
+                        <option value="TN">Tamil Nadu</option>
+                        <option value="TG">Telangana</option>
+                        <option value="TR">Tripura</option>
+                        <option value="UP">Uttar Pradesh</option>
+                        <option value="UT">Uttarakhand</option>
+                        <option value="WB">West Bengal</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+
+        <div class="checkout-summary">
+            <h3 class="section-title">Order Summary</h3>
+            
+            <div id="orderItems">
+                <!-- Order items will be rendered here -->
+            </div>
+            
+            <div id="orderTotals" style="margin-top: 20px;">
+                <!-- Order totals will be rendered here -->
+            </div>
+            
+            <button id="placeOrderBtn" class="form-btn" style="width: 100%; margin-top: 24px;">
+                Place Order
+            </button>
+            
+            <div style="margin-top: 16px;">
+                <a href="cart.html" style="color: var(--accent-yellow); text-decoration: none;">
+                    ← Back to Cart
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="payment-modal" id="paymentModal">
+        <div class="payment-content">
+            <h3 class="section-title">Choose Payment Method</h3>
+            
+            <div class="payment-methods">
+                <div class="payment-method">
+                    <input type="radio" id="cardMethod" name="paymentMethod" value="card" checked>
+                    <label for="cardMethod">💳 Credit/Debit Card</label>
+                </div>
+                <div class="payment-method">
+                    <input type="radio" id="upiMethod" name="paymentMethod" value="upi">
+                    <label for="upiMethod">📱 UPI Payment</label>
+                </div>
+                <div class="payment-method">
+                    <input type="radio" id="codMethod" name="paymentMethod" value="cod">
+                    <label for="codMethod">💵 Cash on Delivery</label>
+                </div>
+            </div>
+            
+            <div id="cardPaymentForm" class="payment-form-section">
+                <div class="form-group">
+                    <label for="cardNumber">Card Number</label>
+                    <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="expiryDate">Expiry Date</label>
+                        <input type="text" id="expiryDate" placeholder="MM/YY" maxlength="5">
+                    </div>
+                    <div class="form-group">
+                        <label for="cvv">CVV</label>
+                        <input type="text" id="cvv" placeholder="123" maxlength="3">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="cardName">Name on Card</label>
+                    <input type="text" id="cardName" placeholder="John Doe">
+                </div>
+            </div>
+            
+            <div id="upiPaymentForm" class="payment-form-section" style="display: none;">
+                <div class="form-group">
+                    <label for="upiId">UPI ID</label>
+                    <input type="text" id="upiId" placeholder="yourname@paytm">
+                </div>
+                <p style="color: var(--text-muted); font-size: 14px;">You will receive a payment request on your UPI app</p>
+            </div>
+            
+            <div id="codPaymentForm" class="payment-form-section" style="display: none;">
+                <div style="background-color: var(--bg-elev); padding: 16px; border-radius: var(--card-radius);">
+                    <p style="color: var(--text); margin-bottom: 8px;">💵 Cash on Delivery</p>
+                    <p style="color: var(--text-muted); font-size: 14px;">Pay when delivered. ₹50 handling charges apply.</p>
+                </div>
+            </div>
+            
+            <div id="paymentForm">
+                
+                <div style="display: flex; gap: 12px; margin-top: 24px;">
+                    <button id="cancelPayment" class="form-btn" style="flex: 1; background-color: var(--bg-elev); margin: 0;">
+                        Cancel
+                    </button>
+                    <button id="processPayment" class="form-btn" style="flex: 1; margin: 0;">
+                        <span id="paymentButtonText">Pay Now</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="paymentProcessing" class="loading-spinner" style="display: none;">
+                <div class="loading"></div>
+                <p style="margin-top: 16px; color: var(--text-muted);">Processing payment...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/checkout.js"></script>
+</body>
+</html>
